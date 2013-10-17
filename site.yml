@@ -1,0 +1,21 @@
+---
+- hosts: all
+  sudo: true
+  user: root
+  tasks:
+  - name: install couchdb
+    pkgin: name={{ item }} state=present
+    with_items:
+    - couchdb
+  - name: configure couchdb user
+    user: name=couchdb group=couchdb createhome=no
+  - name: copy couchdb start config
+    copy: src=files/couchdb.xml dest=~/couchdb.xml
+  - name: copy couchdb config
+    copy: src=files/local.ini dest=/opt/local/etc/couchdb/local.ini
+  - name: configure couchdb
+    shell: svccfg import ~/couchdb.xml
+  - name: start couchdb
+    shell: svcadm enable couchdb epmd
+  - name: start replication
+    shell: "curl -X POST http://127.0.0.1:5984/_replicate -d '{\"source\":\"http://isaacs.iriscouch.com/registry/\", \"target\":\"registry\", \"continuous\":true, \"create_target\":true}' -H \"Content-Type: application/json\""

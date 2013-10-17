@@ -1,0 +1,42 @@
+<?xml version='1.0'?>
+<!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
+<service_bundle type='manifest' name='export'>
+  <service name='application/database/couch' type='service' version='0'>
+    <create_default_instance enabled='false'/>
+    <single_instance/>
+    <dependency name='network' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/milestone/network:default'/>
+    </dependency>
+    <dependency name='filesystem-local' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/system/filesystem/local:default'/>
+    </dependency>
+    <exec_method name='start' type='method' exec='/opt/local/bin/couchdb -b -o /opt/local/var/run/couchdb/couchdb.stdout -e /opt/local/var/run/couchdb/couchdb.stderr -p /opt/local/var/run/couchdb/couchdb.pid' timeout_seconds='300'>
+      <method_context>
+        <method_credential user='couchdb' group='couchdb'/>
+        <method_environment>
+          <envvar name="HOME" value="/opt/local/var/lib/couchdb" />
+          <envvar name="LD_LIBRARY_PATH" value="/opt/local/lib:/opt/local/spidermonkey/lib" />
+        </method_environment>
+      </method_context>
+    </exec_method>
+    <exec_method name='stop' type='method' exec='/opt/local/bin/couchdb -d -p /opt/local/var/run/couchdb/couchdb.pid' timeout_seconds='300'>
+      <method_context>
+        <method_credential user='couchdb' group='couchdb'/>
+        <method_environment>
+          <envvar name="HOME" value="/opt/local/var/lib/couchdb" />
+          <envvar name="LD_LIBRARY_PATH" value="/opt/local/lib:/opt/local/spidermonkey/lib" />
+        </method_environment>
+      </method_context>
+    </exec_method>
+    <stability value='Evolving'/>
+    <template>
+      <common_name>
+        <loctext xml:lang='C'>Apache CouchDB</loctext>
+      </common_name>
+      <documentation>
+        <manpage title='couchdb' section='1M'/>
+        <doc_link name='incubator.apache.org' uri='http://incubator.apache.org/couchdb/'/>
+      </documentation>
+    </template>
+  </service>
+</service_bundle>
