@@ -10,9 +10,10 @@ This is the simplest possible thing that will work.
 
 2. Clone this repo:
 
-  > git clone https://github.com/timoxley/ansible-private-npm.git
-  > cd ansible-private-npm
-
+```
+> git clone https://github.com/timoxley/ansible-private-npm.git
+> cd ansible-private-npm
+```
 3. Edit the file `hosts`, to look something like:
 
 ```
@@ -25,7 +26,9 @@ machine.)
 
 5. Run the playbook:
 
-  > ansible-playbook -i hosts site.yml
+```
+> ansible-playbook -i hosts site.yml
+```
 
 6. You're done.
 
